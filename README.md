@@ -145,3 +145,29 @@ RMB               | Move camera (when in 'Line Edit' mode													          
 
 ### Settings:
 In the "Data" folder there is a file named "settings.json". In it you can set the path to the folder with maps.
+
+---
+
+### How to build
+
+Program tested at Windows 10 (Visual Studio 2022).
+
+#### Windows (Visual Studio & vcpkg):
+- Install Visual Studio and vcpkg;
+- Bind vcpkg and VS:
+```
+vcpkg integrate install
+```
+- Install required packages:<br/>
+```
+vcpkg install sfml:x64-windows
+vcpkg install imgui-sfml:x64-windows
+vcpkg install imgui[docking-experimental]:x64-windows
+```
+- Open .sln project with VS and build.
+
+#### Windows (MSBuild.exe & vcpkg)
+- TBD.
+
+#### Linux (apt-install & vcpkg)
+- TBD.
