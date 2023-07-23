@@ -375,6 +375,7 @@ void Interface::show_railroads()
                 if (ImGui::Selectable(railroad_name.c_str(), selected))
                 {
                     data_storage_.selection_info.railroad = railroad;
+                    data_storage_.selection_info.zone.reset();
                     
                     fields.add_new_railroad_name = railroad_name;
 
