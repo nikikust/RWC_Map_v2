@@ -39,6 +39,7 @@ To succesfully run a program you need "data.rr" file and Maps folder.
 
 ![](https://github.com/nikikust/RWC_Map_v2/blob/main/Raw/images/line_edit.png?raw=true "Line editing")
 
+---
 
 **Railroads list:**
 - add new railroad;
@@ -47,6 +48,7 @@ To succesfully run a program you need "data.rr" file and Maps folder.
 
 ![](https://github.com/nikikust/RWC_Map_v2/blob/main/Raw/images/railroads_list.png?raw=true "Railroads list")
 
+---
 
 **Railroad info:**
 - view and edit associated players;
@@ -60,6 +62,7 @@ To succesfully run a program you need "data.rr" file and Maps folder.
 
 ![](https://github.com/nikikust/RWC_Map_v2/blob/main/Raw/images/railroad_info.png?raw=true "Railroad info")
 
+---
 
 **Players list:**
 - add new player;
@@ -67,12 +70,16 @@ To succesfully run a program you need "data.rr" file and Maps folder.
 
 ![](https://github.com/nikikust/RWC_Map_v2/blob/main/Raw/images/players_list.png?raw=true "Players list")
 
+---
+
 **Player info:**
 - set in game nickname;
 - set discord nickname;
 - move camera to associated railroads.
 
 ![](https://github.com/nikikust/RWC_Map_v2/blob/main/Raw/images/player_info.png?raw=true "Player info")
+
+---
 
 **Settings:**
 - setup autosave in minutes;
@@ -83,6 +90,8 @@ To succesfully run a program you need "data.rr" file and Maps folder.
 - enable ulimited scaling (by default scaling is limited).
 
 ![](https://github.com/nikikust/RWC_Map_v2/blob/main/Raw/images/settings.png?raw=true "Settings")
+
+---
 
 **Length top:**
 - list of all added railroads with their lengths;
