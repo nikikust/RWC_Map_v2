@@ -1,5 +1,8 @@
-# RailWayCraft Map, version 2
+# RailwayCraft Map, version 2
 This is a database program for RWC.
+
+**Important!** To get a database you need to be a RWC Discord member (contact me: nikikust)!
+To succesfully run a program you need "data.rr" file and Maps folder.
 
 ---
 
@@ -19,7 +22,7 @@ This is a database program for RWC.
     - old map (previous copy);
     - difference map (diff. between Current and Old maps, marked with red).
 
-![](https://github.com/nikikust/RWC_Map/Raw/images/.png "Main view")
+![](https://github.com/nikikust/RWC_Map/Raw/images/main_view.png "Main view")
 
 ---
 
@@ -34,7 +37,7 @@ This is a database program for RWC.
     - change color,
     - move points.
 
-![](https://github.com/nikikust/RWC_Map/Raw/images/.png "Line editing")
+![](https://github.com/nikikust/RWC_Map/Raw/images/line_edit.png "Line editing")
 
 
 **Railroads list:**
@@ -42,7 +45,7 @@ This is a database program for RWC.
 - search among added railroad (with partial search and search in AKA names);
 - move camera to the first point of railroad.
 
-![](https://github.com/nikikust/RWC_Map/Raw/images/.png "Railroads list")
+![](https://github.com/nikikust/RWC_Map/Raw/images/railroads_list.png "Railroads list")
 
 
 **Railroad info:**
@@ -55,21 +58,21 @@ This is a database program for RWC.
     - move zone between railroads (when bought or joined).
 - hide on map view.
 
-![](https://github.com/nikikust/RWC_Map/Raw/images/.png "Railroad info")
+![](https://github.com/nikikust/RWC_Map/Raw/images/railroad_info.png "Railroad info")
 
 
 **Players list:**
 - add new player;
 - search among added players (with partial search).
 
-![](https://github.com/nikikust/RWC_Map/Raw/images/.png "Players list")
+![](https://github.com/nikikust/RWC_Map/Raw/images/players_list.png "Players list")
 
 **Player info:**
 - set in game nickname;
 - set discord nickname;
 - move camera to associated railroads.
 
-![](https://github.com/nikikust/RWC_Map/Raw/images/.png "Player info")
+![](https://github.com/nikikust/RWC_Map/Raw/images/player_info.png "Player info")
 
 **Settings:**
 - setup autosave in minutes;
@@ -79,7 +82,7 @@ This is a database program for RWC.
 - select map (current/difference/old);
 - enable ulimited scaling (by default scaling is limited).
 
-![](https://github.com/nikikust/RWC_Map/Raw/images/.png "Settings")
+![](https://github.com/nikikust/RWC_Map/Raw/images/settings.png "Settings")
 
 **Length top:**
 - list of all added railroads with their lengths;
@@ -87,6 +90,8 @@ This is a database program for RWC.
 - select which zone types should be counted;
 - total tracks length;
 - search specific railroad (with partial search and search in AKA names).
+
+![](https://github.com/nikikust/RWC_Map/Raw/images/length_top.png "Length Top")
 
 ---
 
@@ -128,3 +133,6 @@ LMB               | Move camera (when on free space).<br/>Move point (when hover
 RMB               | Move camera (when in 'Line Edit' mode													                   |
 
 ---
+
+### Settings:
+In the "Data" folder there is a file named "settings.json". In it you can set the path to the folder with maps.
