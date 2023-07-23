@@ -126,6 +126,10 @@ int  DataLoader::load_railroads_data(const std::string& path)
 
         fin.close();
     }
+    else
+    {
+        std::cout << "Can't find './Data/data.rr' file!" << std::endl;
+    }
 
     return result;
 }
