@@ -1110,8 +1110,6 @@ void Interface::show_player_info()
     if (ImGui::Button("Close##player_info"))
     {
         data_storage_.menus.PlayerInfo = false;
-
-        return;
     }
 
     ImGui::End();
