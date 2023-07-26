@@ -947,7 +947,9 @@ void Interface::show_railroad_info()
             ImGui::EndListBox();
         }
 
-        if (fields.selected_railroad_for_zone_move.expired() || data_storage_.selection_info.zone.expired())
+        bool disabled = fields.selected_railroad_for_zone_move.expired() || data_storage_.selection_info.zone.expired();
+
+        if (disabled)
             ImGui::BeginDisabled();
 
         if (ImGui::Button("Move to selected RR"))
@@ -968,7 +970,7 @@ void Interface::show_railroad_info()
             }
         }
 
-        if (fields.selected_railroad_for_zone_move.expired() || data_storage_.selection_info.zone.expired())
+        if (disabled)
         {
             ImGui::EndDisabled();
 
