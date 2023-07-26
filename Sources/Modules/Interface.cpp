@@ -1094,7 +1094,14 @@ void Interface::show_player_info()
 
     if (ImGui::Button("Show the\nbeginning\nof the RR##player_info") && railroad_is_selected)
     {
-        data_storage_.camera.position = data_storage_.selection_info.railroad.lock()->starting_point.lock()->position;
+        if (!data_storage_.selection_info.railroad.lock()->starting_point.expired())
+            data_storage_.camera.position = data_storage_.selection_info.railroad.lock()->starting_point.lock()->position;
+        else
+        {
+            data_storage_.menus.fields.cursor_message.elapse_at = time(0) + 5;
+            data_storage_.menus.fields.cursor_message.message = "Railroad doesn't have lines to show!";
+            data_storage_.menus.CursorMessage = true;
+        }
     }
 
     ImGui::Separator();
@@ -1186,6 +1193,15 @@ void Interface::show_length_top()
 
         clipboard.setString(as_string);
     }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Close"))
+    {
+        data_storage_.menus.LengthTop = false;
+
+        fields.initialized = false;
+    }
+
 
     ImGui::SameLine();
     ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
