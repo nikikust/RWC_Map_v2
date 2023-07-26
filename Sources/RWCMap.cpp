@@ -326,7 +326,7 @@ void RWCMap::process_inputs()
     if (utils::key_pressed(sf::Keyboard::D) ||
         utils::key_pressed(sf::Keyboard::Delete))
     {
-        if (data_editor_.keyboard_io_is_released())
+        if (data_editor_.keyboard_io_is_released() && !data_editor_.is_point_moving_mode())
         {
             if (data_editor_.hovered_line())
                 data_editor_.delete_hovered_line();
