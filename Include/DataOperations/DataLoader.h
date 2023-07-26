@@ -22,6 +22,7 @@ public:
     void load_map(sf::Vector2i from, sf::Vector2i to);
 
 private:
+    void backup_railroads_data(const std::string& file_path = "Data\\data.rr", const std::string& backup_path = "Data\\data_backups\\");
     void load_image(sf::Vector2i tile);
 
 private:

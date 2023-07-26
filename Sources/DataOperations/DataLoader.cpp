@@ -136,6 +136,11 @@ int  DataLoader::load_railroads_data(const std::string& path)
 void DataLoader::save_railroads_data(const std::string& path)
 {
     std::cout << "\nSaving ... ";
+
+    // --- Create BackUp
+    backup_railroads_data(path);
+    std::cout << "BackUp created ... ";
+
     // --- Convert data to json
     nlohmann::json data {
         { "Players",   nlohmann::json{} },
@@ -212,6 +217,17 @@ void DataLoader::load_map(sf::Vector2i from, sf::Vector2i to)
     while (data_storage_.map_data.threads_counter > 0) {}
 
     map_data.loading_images = false;
+}
+
+void DataLoader::backup_railroads_data(const std::string& file_path, const std::string& backup_path)
+{
+    if (!utils::file_exists(file_path))
+        return;
+
+    std::ifstream  source     (file_path, std::ios::binary);
+    std::ofstream  destination(backup_path + "data_" + utils::get_time_string() + ".rr", std::ios::binary);
+
+    destination << source.rdbuf();
 }
 void DataLoader::load_image(sf::Vector2i tile)
 {
