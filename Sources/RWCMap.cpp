@@ -326,13 +326,17 @@ void RWCMap::process_inputs()
     if (utils::key_pressed(sf::Keyboard::D) ||
         utils::key_pressed(sf::Keyboard::Delete))
     {
-        if (data_editor_.keyboard_io_is_released() && !data_editor_.is_point_moving_mode())
+        if (data_editor_.keyboard_io_is_released())
         {
             if (data_editor_.hovered_line())
                 data_editor_.delete_hovered_line();
 
-            if (data_editor_.hovered_point())
-                data_editor_.delete_hovered_point();
+            if (data_editor_.hovered_point() && !data_editor_.is_point_moving_mode())
+            {
+                if (!(data_editor_.is_add_line_mode() && 
+                      data_storage_.status.overlapped_point.lock()->id == data_storage_.selection_info.point.lock()->id))
+                    data_editor_.delete_hovered_point();
+            }
         }
     }
 
