@@ -400,7 +400,14 @@ void Interface::show_railroads()
 
     if (ImGui::Button("Show the beginning of the RR##railroads_list"))
     {
-        data_storage_.camera.position = data_storage_.selection_info.railroad.lock()->starting_point.lock()->position;
+        if (!data_storage_.selection_info.railroad.lock()->starting_point.expired())
+            data_storage_.camera.position = data_storage_.selection_info.railroad.lock()->starting_point.lock()->position;
+        else
+        {
+            data_storage_.menus.fields.cursor_message.elapse_at = time(0) + 5;
+            data_storage_.menus.fields.cursor_message.message   = "Railroad doesn't have lines to show!";
+            data_storage_.menus.CursorMessage = true;
+        }
     }
 
     if (!railroad_is_selected)
