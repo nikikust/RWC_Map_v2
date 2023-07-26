@@ -29,7 +29,7 @@ void Renderer::update()
     map_data.view_from           = position_to_sector(camera.position - screen_size_scaled);
     map_data.view_to             = position_to_sector(camera.position + screen_size_scaled);
 
-    if (map_data.loading_images == false)
+    if (map_data.loading_images == false && !view_area_is_loaded())
     {
         map_data.loading_images = true;
     
@@ -56,16 +56,16 @@ void Renderer::draw_map   ()
     auto& camera   = data_storage_.camera;
     auto& map_data = data_storage_.map_data;
 
-    sf::Vector2i from = map_data.view_from; // copy to clip
-    sf::Vector2i to   = map_data.view_to;   // 
+    sf::Vector2i &from = map_data.view_from; // copy to clip
+    sf::Vector2i &to   = map_data.view_to;   // 
 
     // --- //
 
-    from.x = std::max(0, from.x);
-    from.y = std::max(0, from.y);
-
-    to.x = std::min(to.x, SPRITES_AMOUNT_HORIZONTAL - 1);
-    to.y = std::min(to.y, SPRITES_AMOUNT_VERTICAL   - 1);
+    // from.x = std::max(0, from.x);
+    // from.y = std::max(0, from.y);
+    // 
+    // to.x = std::min(to.x, SPRITES_AMOUNT_HORIZONTAL - 1);
+    // to.y = std::min(to.y, SPRITES_AMOUNT_VERTICAL   - 1);
 
     // --- //
 
@@ -400,4 +400,17 @@ sf::Vector2i Renderer::position_to_sector(sf::Vector2i position)
     };
 
     return sector;
+}
+bool Renderer::view_area_is_loaded()
+{
+    sf::Vector2i &from = data_storage_.map_data.view_from;
+    sf::Vector2i &to   = data_storage_.map_data.view_to;
+
+    for (int vertical = 0; vertical < SPRITES_AMOUNT_VERTICAL; ++vertical)
+        for (int horizontal = 0; horizontal < SPRITES_AMOUNT_HORIZONTAL; ++horizontal)
+            if (utils::in(from.x, horizontal, to.x) && utils::in(from.y, vertical, to.y))
+                if (data_storage_.map_data.map_images[vertical * SPRITES_AMOUNT_HORIZONTAL + horizontal].container_state.load() == ImageContainer::EMPTY)
+                    return 0;
+
+    return 1;
 }

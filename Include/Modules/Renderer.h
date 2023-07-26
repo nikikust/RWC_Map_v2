@@ -25,6 +25,7 @@ private:
     void draw_points();
 
     sf::Vector2i position_to_sector(sf::Vector2i position);
+    bool view_area_is_loaded();
 
 
     DataStorage& data_storage_;

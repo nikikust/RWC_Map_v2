@@ -65,12 +65,20 @@ namespace utils
 
     bool file_exists(const std::string& path)
     {
-        std::ifstream test(path);
-        if (test.is_open())
+        try
         {
-            test.close();
-            return true;
+            std::ifstream test(path);
+            if (test.is_open())
+            {
+                test.close();
+                return true;
+            }
         }
+        catch (const std::exception& err)
+        {
+            std::cout << "file_exists(): " << err.what() << std::endl;
+        }
+
         return false;
     }
     std::string get_time_string()
