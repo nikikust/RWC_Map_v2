@@ -454,28 +454,24 @@ void Interface::show_players()
 
     if (ImGui::BeginListBox("##players_list"))
     {
-        auto it = data_storage_.railroads_data.Players.begin();
-
-        while (it != data_storage_.railroads_data.Players.end())
+        for (auto& player : data_storage_.railroads_data.Players)
         {
-            auto& item_nickname = (*it)->nickname;
-
             if (fields.players_search.empty() ||
-                utils::part_of_str(fields.players_search, item_nickname))
+                utils::part_of_str(fields.players_search, player->nickname) ||
+                utils::part_of_str(fields.players_search, player->discord))
             {
                 bool selected = false;
 
                 if (!data_storage_.selection_info.player.expired())
-                    selected = data_storage_.selection_info.player.lock()->nickname == item_nickname;
+                    selected = data_storage_.selection_info.player.lock()->nickname == player->nickname;
 
-                if (ImGui::Selectable(item_nickname.c_str(), selected))
+                if (ImGui::Selectable(player->nickname.c_str(), selected))
                 {
-                    data_storage_.selection_info.player = *it;
+                    data_storage_.selection_info.player = player;
 
-                    fields.add_new_player_nick = item_nickname;
+                    fields.add_new_player_nick = player->nickname;
                 }
             }
-            ++it;
         }
 
         ImGui::EndListBox();
@@ -1082,9 +1078,8 @@ void Interface::show_player_info()
                 {
                     data_storage_.selection_info.railroad = *it;
 
-                    // color2[0] = RRNames[selected_rr_id].col.r / 255.;
-                    // color2[1] = RRNames[selected_rr_id].col.g / 255.;
-                    // color2[2] = RRNames[selected_rr_id].col.b / 255.;
+                    data_storage_.menus.fields.lines_edit   .initialized = false;
+                    data_storage_.menus.fields.railroad_info.initialized = false;
                 }
             }
             
