@@ -706,7 +706,8 @@ void Interface::show_railroad_info()
         for (auto& player : data_storage_.railroads_data.Players)
         {
             if (fields.all_players_search.empty() ||
-                utils::part_of_str(fields.all_players_search, player->nickname))
+                utils::part_of_str(fields.all_players_search, player->nickname) ||
+                utils::part_of_str(fields.all_players_search, player->discord))
             {
                 if (!railroad->have_associated(player->id))
                     if (ImGui::Selectable(player->nickname.c_str(), false))
@@ -729,9 +730,11 @@ void Interface::show_railroad_info()
         while (it != railroad->associated.end())
         {
             std::string nickname = it->lock()->nickname;
+            std::string discord  = it->lock()->discord;
 
             if (fields.associated_players_search.empty() ||
-                utils::part_of_str(fields.associated_players_search, nickname))
+                utils::part_of_str(fields.associated_players_search, nickname) ||
+                utils::part_of_str(fields.all_players_search, discord))
             {
                 if (ImGui::Selectable(nickname.c_str(), false))
                 {
