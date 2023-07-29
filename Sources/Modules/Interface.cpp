@@ -256,6 +256,9 @@ void Interface::show_lines_edit()
 
     ImGui::Begin("Line edit");
 
+    if (!railroad_selected)
+        ImGui::BeginDisabled();
+
     ImGui::Text("RR name: "); ImGui::SameLine();
     ImGui::InputText("##new_RR_name", &fields.new_RR_name);
 
