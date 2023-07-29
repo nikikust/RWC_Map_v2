@@ -88,16 +88,20 @@ void RWCMap::poll_events()
             window_.on_resize(event);
             break;
         case sf::Event::MouseButtonPressed:
-            utils::mouse_states[event.mouseButton.button] = utils::ButtonState::Pressed;
+            if (utils::in(0, event.mouseButton.button, sf::Mouse::ButtonCount - 1))
+                utils::mouse_states[event.mouseButton.button] = utils::ButtonState::Pressed;
             break;
         case sf::Event::MouseButtonReleased:
-            utils::mouse_states[event.mouseButton.button] = utils::ButtonState::Released;
+            if (utils::in(0, event.mouseButton.button, sf::Mouse::ButtonCount - 1))
+                utils::mouse_states[event.mouseButton.button] = utils::ButtonState::Released;
             break;
         case sf::Event::KeyPressed:
-            utils::key_states[event.key.code] = utils::ButtonState::Pressed;
+            if (utils::in(0, event.key.code, sf::Keyboard::KeyCount - 1))
+                utils::key_states[event.key.code] = utils::ButtonState::Pressed;
             break;
         case sf::Event::KeyReleased:
-            utils::key_states[event.key.code] = utils::ButtonState::Released;
+            if (utils::in(0, event.key.code, sf::Keyboard::KeyCount - 1))
+                utils::key_states[event.key.code] = utils::ButtonState::Released;
             break;
         default:
             break;
