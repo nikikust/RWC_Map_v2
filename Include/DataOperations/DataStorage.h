@@ -109,7 +109,8 @@ struct DataStorage
                 std::string zone_add_name      = "";
                 std::string rename_zone        = "";
 
-                bool delete_zone = false;
+                bool delete_zone     = false;
+                bool delete_railroad = false;
 
                 std::string railroads_search   = "";
                 std::weak_ptr<Railroad> selected_railroad_for_zone_move;

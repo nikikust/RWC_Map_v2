@@ -37,6 +37,8 @@ public:
     void add_aka_name(std::string name);
     void remove_aka_name(std::string name);
 
+    void erase_from_lists(DataStorage& data_storage);
+
 public:
     int id = 0;
     std::string name = ""; 

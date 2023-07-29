@@ -1011,6 +1011,34 @@ void Interface::show_railroad_info()
 
     ImGui::Checkbox("Hide Railroad", &railroad->hide);
 
+
+    if (ImGui::Button("Delete Railroad##railroad_info_railroad_delete"))
+    {
+        fields.delete_railroad = true;
+    }
+
+    if (fields.delete_railroad == true)
+    {
+        ImGui::SameLine();
+
+        if (ImGui::Button("Confirm##railroad_info_railroad_delete"))
+        {
+            railroad->erase_from_lists(data_storage_);
+
+            data_storage_.selection_info.railroad.reset();
+            data_storage_.selection_info.zone    .reset();
+
+            fields.delete_railroad = false;
+            fields.delete_zone     = false;
+
+            fields.initialized = false;
+            data_storage_.menus.fields.lines_edit.initialized = false;
+
+            data_storage_.menus.RailroadInfo = false;
+        }
+    }
+
+    ImGui::Separator();
     ImGui::Text("Amount of connected lines: %i", railroad->lines_connected);
     ImGui::End();
 }

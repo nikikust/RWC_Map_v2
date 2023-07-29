@@ -69,6 +69,22 @@ void Railroad::remove_aka_name(std::string name)
                 { return left < right; });
 }
 
+void Railroad::erase_from_lists(DataStorage& data_storage)
+{
+    std::vector<std::shared_ptr<RR_Zone>> zones_to_erase;
+
+    for (auto& zone : data_storage.railroads_data.RR_Zones)
+        if (zone->railroad.lock()->id == this->id)
+            zones_to_erase.push_back(zone);
+
+    for (auto& zone : zones_to_erase)
+        zone->erase_from_lists(data_storage);
+
+    zones_to_erase.clear();
+
+    data_storage.railroads_data.erase_Railroad_by_ID(this->id);
+}
+
 RR_Zone::ZoneState RR_Zone::ZoneState_from_int(int state)
 {
     switch (state)
