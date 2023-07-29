@@ -256,26 +256,30 @@ void Interface::show_lines_edit()
 
     ImGui::Begin("Line edit");
 
-    if (!railroad_selected)
-        ImGui::BeginDisabled();
-
     ImGui::Text("RR name: "); ImGui::SameLine();
     ImGui::InputText("##new_RR_name", &fields.new_RR_name);
 
-
-    if (ImGui::Button("Change name") && railroad_selected) {
-        auto railroad = data_storage_.selection_info.railroad.lock();
-
-        if (!data_storage_.railroads_data.contains_Railroad_with_name(fields.new_RR_name))
+    if (ImGui::Button("Change name") && railroad_selected)
+    {
+        if (fields.new_RR_name.empty())
         {
-            railroad->remove_aka_name(railroad->name);
-
-            railroad->name = fields.new_RR_name;
-
-            railroad->add_aka_name(railroad->name);
+            create_message("This field can't be empty!");
         }
+        else
+        {
+            auto railroad = data_storage_.selection_info.railroad.lock();
 
-        fields.new_RR_name = railroad->name;
+            if (!data_storage_.railroads_data.contains_Railroad_with_name(fields.new_RR_name))
+            {
+                railroad->remove_aka_name(railroad->name);
+
+                railroad->name = fields.new_RR_name;
+
+                railroad->add_aka_name(railroad->name);
+            }
+
+            fields.new_RR_name = railroad->name;
+        }
     }
 
     if (ImGui::ColorEdit3("Line color", fields.new_RR_color_3f) && railroad_selected)
@@ -334,9 +338,15 @@ void Interface::show_railroads()
 
     ImGui::SameLine();
 
+    
+
     if (ImGui::Button("Add railroad"))
     {
-        if (!data_storage_.railroads_data.contains_Railroad_with_name(fields.add_new_railroad_name))
+        if (fields.add_new_railroad_name.empty())
+        {
+            create_message("This field can't be empty!");
+        }
+        else if (!data_storage_.railroads_data.contains_Railroad_with_name(fields.add_new_railroad_name))
         {
             Railroad new_railroad{
                 0, fields.add_new_railroad_name, sf::Color::White
@@ -404,9 +414,7 @@ void Interface::show_railroads()
             data_storage_.camera.position = data_storage_.selection_info.railroad.lock()->starting_point.lock()->position;
         else
         {
-            data_storage_.menus.fields.cursor_message.elapse_at = time(0) + 5;
-            data_storage_.menus.fields.cursor_message.message   = "Railroad doesn't have lines to show!";
-            data_storage_.menus.CursorMessage = true;
+            create_message("Railroad doesn't have lines to show!");
         }
     }
 
@@ -432,7 +440,11 @@ void Interface::show_players()
 
     if (ImGui::Button("Add player"))
     {
-        if (!data_storage_.railroads_data.contains_Player_with_nick(fields.add_new_player_nick))
+        if (fields.add_new_player_nick.empty())
+        {
+            create_message("This field can't be empty!");
+        }
+        else if (!data_storage_.railroads_data.contains_Player_with_nick(fields.add_new_player_nick))
         {
             Player new_player{
                 0, fields.add_new_player_nick
@@ -763,16 +775,22 @@ void Interface::show_railroad_info()
     ImGui::InputText("##railroad_info_aka_name_add", &data_storage_.menus.fields.railroad_info.AKA_names_add_name); ImGui::SameLine();
     ImGui::PopItemWidth();
 
-    if (ImGui::Button("Add name##railroad_info_aka_name_add") &&
-        !data_storage_.menus.fields.railroad_info.AKA_names_add_name.empty())
+    if (ImGui::Button("Add name##railroad_info_aka_name_add"))
     {
-        std::string aka_name = data_storage_.menus.fields.railroad_info.AKA_names_add_name;
-
-        if (!utils::is_in_vector(aka_name, railroad->aka_names))
+        if (fields.AKA_names_add_name.empty())
         {
-            railroad->aka_names.push_back(fields.AKA_names_add_name);
+            create_message("This field can't be empty!");
+        }
+        else
+        {
+            std::string aka_name = data_storage_.menus.fields.railroad_info.AKA_names_add_name;
 
-            fields.AKA_names_add_name = "";
+            if (!utils::is_in_vector(aka_name, railroad->aka_names))
+            {
+                railroad->aka_names.push_back(fields.AKA_names_add_name);
+
+                fields.AKA_names_add_name = "";
+            }
         }
     }
 
@@ -822,10 +840,13 @@ void Interface::show_railroad_info()
     ImGui::InputText("##railroad_info_zone_add", &fields.zone_add_name); ImGui::SameLine();
     ImGui::PopItemWidth();
 
-    if (ImGui::Button("Add##railroad_info_zone_add") &&
-        !fields.zone_add_name.empty())
+    if (ImGui::Button("Add##railroad_info_zone_add"))
     {
-        if (!data_storage_.railroads_data.contains_Zone_with_name(fields.zone_add_name, railroad->id))
+        if (fields.zone_add_name.empty())
+        {
+            create_message("This field can't be empty!");
+        }
+        else if (!data_storage_.railroads_data.contains_Zone_with_name(fields.zone_add_name, railroad->id))
         {
             RR_Zone zone{ 0, fields.zone_add_name, RR_Zone::Built, railroad };
 
@@ -967,9 +988,7 @@ void Interface::show_railroad_info()
             }
             else
             {
-                data_storage_.menus.CursorMessage = true;
-                data_storage_.menus.fields.cursor_message.elapse_at = time(0) + 5;
-                data_storage_.menus.fields.cursor_message.message   = "Target RR have Zone with same name";
+                create_message("Target RR have Zone with same name");
             }
         }
 
@@ -1036,7 +1055,10 @@ void Interface::show_player_info()
 
     if (ImGui::Button("Change##player_info_change_nickname"))
     {
-        player->nickname = data_storage_.menus.fields.player_info.new_nickname;
+        if (fields.new_nickname.empty())
+            create_message("This field can't be empty!");
+        else
+            player->nickname = data_storage_.menus.fields.player_info.new_nickname;
     }
 
 
@@ -1103,9 +1125,7 @@ void Interface::show_player_info()
             data_storage_.camera.position = data_storage_.selection_info.railroad.lock()->starting_point.lock()->position;
         else
         {
-            data_storage_.menus.fields.cursor_message.elapse_at = time(0) + 5;
-            data_storage_.menus.fields.cursor_message.message = "Railroad doesn't have lines to show!";
-            data_storage_.menus.CursorMessage = true;
+            create_message("Railroad doesn't have lines to show!");
         }
     }
 
@@ -1365,4 +1385,13 @@ void Interface::show_exit_popup()
 
         ImGui::EndPopup();
     }
+}
+
+// --- //
+
+void Interface::create_message(const std::string& message, int timeout)
+{
+    data_storage_.menus.CursorMessage = true;
+    data_storage_.menus.fields.cursor_message.elapse_at = time(0) + timeout;
+    data_storage_.menus.fields.cursor_message.message = message;
 }

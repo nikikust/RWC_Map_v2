@@ -221,9 +221,9 @@ void DataEditor::create_line()
 void DataEditor::split_line()
 {
     // --- Current selection
-    auto current_railroad = data_storage_.selection_info.railroad;
-    auto current_zone     = data_storage_.selection_info.zone    ;
-    auto current_point    = data_storage_.selection_info.point   ;
+    auto current_railroad = data_storage_.selection_info.railroad; //
+    auto current_zone     = data_storage_.selection_info.zone    ; // is swap copy
+    auto current_point    = data_storage_.selection_info.point   ; //
 
     // --- Splitted line info
     auto splitted_line = data_storage_.status.overlapped_line.lock();

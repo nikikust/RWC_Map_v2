@@ -41,6 +41,11 @@ private:
 
     void show_exit_popup();
 
+    // --- Utils
+
+    void create_message(const std::string& message, int timeout = 5);
+
+    // --- //
 
     DataStorage& data_storage_;
     DataLoader&  data_loader_;
