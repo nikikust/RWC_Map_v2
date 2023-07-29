@@ -1,7 +1,7 @@
 # RailwayCraft Map, version 2
 This is a database program for RWC.
 
-**Important!** To get a database you need to be a RWC Discord member (contact me: nikikust)!
+**Important!** To get a database you need to be a RWC Discord member (DM me: @nikikust)!
 To succesfully run a program you need "data.rr" file and Maps folder.
 
 ---
@@ -139,7 +139,7 @@ P                 | Make a screenshot																		                   |
 F1-6,10           | Open menus																				                   |
 Ctrl+S            | Save data																				                   |
 LMB               | Move camera (when on free space).<br/>Move point (when hovered)<br/>Select railroad (when line is clicked) |
-RMB               | Move camera (when in 'Line Edit' mode													                   |
+RMB               | Move camera (when in 'Line Edit' mode)													                   |
 
 ---
 
@@ -163,6 +163,7 @@ vcpkg integrate install
 vcpkg install sfml:x64-windows
 vcpkg install imgui-sfml:x64-windows
 vcpkg install imgui[docking-experimental]:x64-windows
+vcpkg install nlohmann-json
 ```
 - Open .sln project with VS and build.
 

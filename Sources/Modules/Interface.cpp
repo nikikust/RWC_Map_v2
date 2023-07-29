@@ -1151,6 +1151,12 @@ void Interface::show_length_top()
     ImGui::Begin("Length top");
 
     ImGui::Text("Railroad Search: ");
+
+    if (ImGui::Button("X##clear_length_top_search"))
+        fields.search_name.clear();
+
+    ImGui::SameLine();
+
     ImGui::InputText("##length_top_railroad_search", &fields.search_name);
 
     ImGui::Separator();
