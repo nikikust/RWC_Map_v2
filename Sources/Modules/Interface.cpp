@@ -1091,26 +1091,25 @@ void Interface::show_player_info()
 
     if (ImGui::BeginListBox("##player_info_associated_list"))
     {
-        auto it = data_storage_.railroads_data.Railroads.begin();
-        while (it != data_storage_.railroads_data.Railroads.end())
+        for (auto& railroad : data_storage_.railroads_data.Railroads)
         {
-            if ((*it)->have_associated(player->id))
+            if (railroad->have_associated(player->id))
             {
                 bool selected = false;
 
                 if (railroad_is_selected)
-                    selected = (*it)->id == data_storage_.selection_info.railroad.lock()->id;
+                    selected = railroad->id == data_storage_.selection_info.railroad.lock()->id;
 
-                if (ImGui::Selectable((*it)->name.c_str(), selected))
+                if (ImGui::Selectable(railroad->name.c_str(), selected))
                 {
-                    data_storage_.selection_info.railroad = *it;
+                    data_storage_.selection_info.railroad = railroad;
+                    data_storage_.selection_info.zone.reset();
 
-                    data_storage_.menus.fields.lines_edit   .initialized = false;
+                    data_storage_.menus.RailroadInfo = true;
                     data_storage_.menus.fields.railroad_info.initialized = false;
+                    data_storage_.menus.fields.lines_edit   .initialized = false;
                 }
             }
-            
-            ++it;
         }
 
         ImGui::EndListBox();
