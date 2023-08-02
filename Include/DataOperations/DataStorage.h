@@ -184,7 +184,7 @@ struct DataStorage
             CURRENT,
             DIFFERENCE,
             OLD
-        } map_view = MapView::OLD;
+        } map_view = MapView::CURRENT;
 
         float background_color_3f[3] = { 0 };
         sf::Color background_color   = { 0, 0 ,0 ,255 };
