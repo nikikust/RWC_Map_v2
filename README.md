@@ -4,6 +4,8 @@ This is a database program for RWC.
 **Important!** To get a database you need to be a RWC Discord member (DM me: @nikikust)!
 To succesfully run a program you need "data.rr" file and Maps folder.
 
+The program creates a backup copy of the railroads data before each save (in ./Data/data_backups/).
+
 ---
 
 ## List of stored information
