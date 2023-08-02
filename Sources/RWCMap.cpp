@@ -77,6 +77,8 @@ int RWCMap::main_loop()
         window_.cls();
         renderer_.draw();
         window_.flip();
+
+        data_editor_.check_screenshot_status();
     }
 
     return 0;
@@ -320,7 +322,10 @@ void RWCMap::process_inputs()
     if (utils::key_pressed(sf::Keyboard::P))
     {
         if (data_editor_.keyboard_io_is_released())
-            data_editor_.make_screenshot();
+            if (data_storage_.settings.disable_interface_on_screenshot)
+                data_editor_.screenshot_without_interface();
+            else
+                data_editor_.screenshot_with_interface();
     }
     if (utils::key_pressed(sf::Keyboard::H))
     {

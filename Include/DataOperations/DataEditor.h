@@ -67,8 +67,15 @@ public:
     void zoom_in();
 
     void open_livemap();
-    void make_screenshot();
+
+    void screenshot_with_interface();
+    void screenshot_without_interface();
+    void check_screenshot_status();
+
     void flip_exit_popup_state();
+
+private:
+    void make_screenshot();
 
 private:
     DataStorage& data_storage_;

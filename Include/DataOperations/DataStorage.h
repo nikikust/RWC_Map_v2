@@ -175,9 +175,7 @@ struct DataStorage
         bool super_scale     = false; 
         bool hide_map        = false; 
 
-        bool screen_shot_mode          = false;
-        bool no_camera_position_limits = false;
-        bool no_scale_position_limits  = false;
+        bool disable_interface_on_screenshot = false;
 
         enum class MapView
         {
@@ -221,6 +219,9 @@ struct DataStorage
 
         int saving_counter { 0 };
         int saving_total   { 0 };
+
+        bool make_screenshot         = false;
+        int  screenshot_frames_delay = 0;
     } status;
 
     struct Camera

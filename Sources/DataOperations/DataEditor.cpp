@@ -344,6 +344,33 @@ void DataEditor::open_livemap()
 
     ShellExecute(0, 0, std::wstring(livemap_link.begin(), livemap_link.end()).c_str(), 0, 0, SW_SHOW);
 }
+
+void DataEditor::screenshot_with_interface()
+{
+    data_storage_.status.make_screenshot         = true;
+    data_storage_.status.screenshot_frames_delay = 0;
+}
+void DataEditor::screenshot_without_interface()
+{
+    data_storage_.status.make_screenshot         = true;
+    data_storage_.status.screenshot_frames_delay = 2;
+}
+void DataEditor::check_screenshot_status()
+{
+    if (data_storage_.status.make_screenshot == false)
+        return;
+
+    if (data_storage_.status.screenshot_frames_delay > 0)
+    {
+        data_storage_.status.screenshot_frames_delay--;
+
+        return;
+    }
+
+    make_screenshot();
+
+    data_storage_.status.make_screenshot = false;
+}
 void DataEditor::make_screenshot()
 {
     auto& render_window = window_.get_render_area();
@@ -354,6 +381,7 @@ void DataEditor::make_screenshot()
 
     texture.copyToImage().saveToFile("Data\\screenshots\\" + utils::get_time_string() + ".png");
 }
+
 void DataEditor::flip_exit_popup_state()
 {
     data_storage_.menus.ConfirmExit.should_be_open = !data_storage_.menus.ConfirmExit.is_open;

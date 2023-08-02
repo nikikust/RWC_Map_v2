@@ -19,6 +19,9 @@ void Interface::update()
 {
     check_autosave      ();
 
+    if (data_storage_.status.make_screenshot && data_storage_.settings.disable_interface_on_screenshot)
+        return;
+
     show_main           ();
     show_help           ();
     show_lines_edit     ();
@@ -598,9 +601,7 @@ void Interface::show_settings()
     if (!data_storage_.settings.super_scale)
         ImGui::BeginDisabled();
 
-    ImGui::SameLine();
-
-    if (ImGui::Button("Map to screen"))
+    if (ImGui::Button("Map to screen height"))
     {
         data_storage_.camera.scale_modifier_as_pow2 = (float)data_storage_.screen_size.y / (SPRITES_AMOUNT_VERTICAL * data_storage_.map_data.sprite_size.y);
 
@@ -611,8 +612,25 @@ void Interface::show_settings()
         data_storage_.map_data.reset_images_states();
     }
 
+    ImGui::SameLine();
+
+    if (ImGui::Button("Map to screen width"))
+    {
+        data_storage_.camera.scale_modifier_as_pow2 = (float)data_storage_.screen_size.x / (SPRITES_AMOUNT_VERTICAL * data_storage_.map_data.sprite_size.x);
+
+        data_storage_.camera.scale_modifier = log2f(data_storage_.camera.scale_modifier_as_pow2);
+
+        data_storage_.camera.position = { -500, 300 };
+
+        data_storage_.map_data.reset_images_states();
+    }
+
     if (!data_storage_.settings.super_scale)
         ImGui::EndDisabled();
+
+
+    ImGui::Separator();
+    ImGui::Checkbox("Disable interface on screenshot", &data_storage_.settings.disable_interface_on_screenshot);
 
     ImGui::End();
 }
