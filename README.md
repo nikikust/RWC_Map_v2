@@ -12,7 +12,8 @@ To succesfully run a program you need "data.rr" file and Maps folder.
     - accepted plans;
     - railroad Zones (subdivisions, states: Built/In Progress/Plan);
     - AKA names (previous names, abbreviations, simplified names);
-    - associated players (owners).
+    - associated players (owners);
+    - length top (and comparision with previous data).
 - Players data:
     - server nicknames;
     - discord nicknames;
@@ -94,7 +95,7 @@ To succesfully run a program you need "data.rr" file and Maps folder.
 ---
 
 **Length top:**
-- list of all added railroads with their lengths;
+- list of all added railroads with their lengths (with comparision with previous data - difference in length and position);
 - copy list to clipboard;
 - select which zone types should be counted;
 - total tracks length;
