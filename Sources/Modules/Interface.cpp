@@ -1,10 +1,12 @@
 #include "../../Include/Modules/Interface.h"
 
 
-Interface::Interface(DataStorage& data_storage, DataLoader& data_loader, Window& window)
+Interface::Interface(DataStorage& data_storage, DataLoader& data_loader, Window& window, DataStorage& data_storage_diff)
     : data_storage_(data_storage),
       data_loader_ (data_loader),
-      window_      (window)
+      window_      (window),
+
+      data_storage_diff_(data_storage_diff)
 {
     init();
 }
@@ -1194,10 +1196,12 @@ void Interface::show_length_top()
 
     if (ImGui::Button("Update") || !fields.initialized)
     {
-        fields.total_length = 0;
+        // --- Current data
 
-        fields.railroad_keys.clear();
-        fields.entries      .clear();
+        fields.current_data.total_length = 0;
+
+        fields.current_data.railroad_keys.clear();
+        fields.current_data.entries      .clear();
 
         for (auto& line : data_storage_.railroads_data.RR_Lines)
         {
@@ -1213,30 +1217,92 @@ void Interface::show_length_top()
 
             // --- //
 
-            auto  railroad    = zone->railroad.lock();
+            auto railroad = zone->railroad.lock();
 
             if (railroad->name == "World Border")
                 continue;
 
             float line_length = utils::pif(line->pointA.lock()->position - line->pointB.lock()->position) * 2;
 
-            if (fields.railroad_keys.contains(railroad->id))
-                fields.entries.at(fields.railroad_keys.at(railroad->id)).length += line_length;
+            if (fields.current_data.railroad_keys.contains(railroad->id))
+                fields.current_data.entries.at(fields.current_data.railroad_keys.at(railroad->id)).length += line_length;
             else
             {
-                fields.railroad_keys.insert({ railroad->id, (int)fields.entries.size() });
-                fields.entries.push_back({ railroad, line_length });
+                fields.current_data.railroad_keys.insert({ railroad->id, fields.current_data.entries.size() });
+                fields.current_data.entries.push_back({ railroad, line_length });
             }
 
-            fields.total_length += line_length;
+            fields.current_data.total_length += line_length;
         }
 
-        fields.railroad_keys.clear();
+        fields.current_data.railroad_keys.clear();
 
-        std::sort(fields.entries.begin(), fields.entries.end(),
+        std::sort(fields.current_data.entries.begin(), fields.current_data.entries.end(),
                   [](const DataStorage::Menus::Fields::LengthTop::LengthTopEntry& left, 
                      const DataStorage::Menus::Fields::LengthTop::LengthTopEntry& right)
                     { return left.length > right.length; });
+
+        size_t counter_current = 0;
+        for (auto& entry : fields.current_data.entries)
+        {
+            entry.top_position = counter_current + 1;
+            fields.current_data.railroad_keys.insert({ entry.railroad.lock()->id, counter_current++ });
+        }
+
+        // --- Old data
+
+        fields.old_data.total_length = 0;
+
+        fields.old_data.railroad_keys.clear();
+        fields.old_data.entries      .clear();
+
+        for (auto& line : data_storage_diff_.railroads_data.RR_Lines)
+        {
+            auto zone = line->zone.lock();
+
+            switch (zone->state)
+            {
+            case RR_Zone::Built      : if (!fields.with_built       ) continue; break;
+            case RR_Zone::InProgress : if (!fields.with_in_progress ) continue; break;
+            case RR_Zone::Plan       : if (!fields.with_plans       ) continue; break;
+            default:                                                  continue;
+            }
+
+            // --- //
+
+            auto railroad = zone->railroad.lock();
+
+            if (railroad->name == "World Border")
+                continue;
+
+            float line_length = utils::pif(line->pointA.lock()->position - line->pointB.lock()->position) * 2;
+
+            if (fields.old_data.railroad_keys.contains(railroad->id))
+                fields.old_data.entries.at(fields.old_data.railroad_keys.at(railroad->id)).length += line_length;
+            else
+            {
+                fields.old_data.railroad_keys.insert({ railroad->id, fields.old_data.entries.size() });
+                fields.old_data.entries.push_back({ railroad, line_length });
+            }
+
+            fields.old_data.total_length += line_length;
+        }
+
+        fields.old_data.railroad_keys.clear();
+
+        std::sort(fields.old_data.entries.begin(), fields.old_data.entries.end(),
+                  [](const DataStorage::Menus::Fields::LengthTop::LengthTopEntry& left, 
+                     const DataStorage::Menus::Fields::LengthTop::LengthTopEntry& right)
+                    { return left.length > right.length; });
+
+        size_t counter_old = 0;
+        for (auto& entry_reff : fields.old_data.entries)
+        {
+            entry_reff.top_position = counter_old + 1;
+            fields.old_data.railroad_keys.insert({ entry_reff.railroad.lock()->id, counter_old++ });
+        }
+
+        // --- //
 
         fields.initialized = true;
     }
@@ -1246,11 +1312,11 @@ void Interface::show_length_top()
     {
         sf::Clipboard clipboard;
 
-        std::string as_string = "Total length: " + std::to_string((int)ceil(fields.total_length)) + "\n";
-        int counter = 1;
+        std::string as_string = "Total length: " + std::to_string((int)ceil(fields.current_data.total_length)) + "\n";
+        int position_counter = 1;
 
-        for (auto& entry : fields.entries)
-            as_string += std::to_string(counter++) + ") " + entry.railroad.lock()->name + " - " + std::to_string((int)ceil(entry.length)) + "\n";
+        for (auto& entry : fields.current_data.entries)
+            as_string += std::to_string(position_counter++) + ") " + entry.railroad.lock()->name + " - " + std::to_string((int)ceil(entry.length)) + "\n";
 
         clipboard.setString(as_string);
     }
@@ -1278,12 +1344,15 @@ void Interface::show_length_top()
     ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical); 
 
     ImGui::SameLine();
-    ImGui::Text("Total length: %i", (int)ceil(fields.total_length));
+    ImGui::Text("Total length: %i (+%.1f%%, %i +%i)", 
+        (int)ceil(fields.current_data.total_length),
+        (fields.current_data.total_length - fields.old_data.total_length) / fields.old_data.total_length * 100.f,
+        (int)ceil(fields.old_data.total_length),
+        (int)(fields.current_data.total_length - fields.old_data.total_length)
+    );
 
     if (ImGui::BeginChildFrame(ImGui::GetID("length_top_child"), { -FLT_MIN, -FLT_MIN }))
     {
-        int counter = 0;
-
         ImGuiTableFlags table_flags =
             ImGuiTableFlags_RowBg           |
             ImGuiTableFlags_SizingFixedFit  |
@@ -1292,31 +1361,86 @@ void Interface::show_length_top()
             ImGuiTableFlags_NoSavedSettings |
             ImGuiTableFlags_Borders;
 
-        if (ImGui::BeginTable("##length_top_table", 3, table_flags))
+        if (ImGui::BeginTable("##length_top_table", 6, table_flags))
         {
             ImGui::TableSetupColumn("Position");
             ImGui::TableSetupColumn("Railroad Name");
             ImGui::TableSetupColumn("Length");
+            ImGui::TableSetupColumn("Previous Length");
+            ImGui::TableSetupColumn("Difference");
+            ImGui::TableSetupColumn("Previous Position");
 
             ImGui::TableHeadersRow();
 
-            for (auto& entry : fields.entries)
+            for (auto& entry : fields.current_data.entries)
             {
                 auto railroad = entry.railroad.lock();
-
-                counter++;
 
                 if (!fields.search_name.empty() && !utils::part_is_in_vector(fields.search_name, railroad->aka_names))
                     continue;
 
-                ImGui::TableNextColumn();
-                ImGui::Text("%i", counter);
+                auto railroad_reference = data_storage_diff_.railroads_data.get_Railroad_by_ID(railroad->id);
 
-                ImGui::TableNextColumn();
+                ImGui::TableNextColumn(); // Position
+                ImGui::Text("%i", (int)entry.top_position);
+
+                ImGui::TableNextColumn(); // Name
                 ImGui::Text("%s", railroad->name.c_str());
 
-                ImGui::TableNextColumn();
+                ImGui::TableNextColumn(); // Length
                 ImGui::Text("%i", (int)ceil(entry.length));
+
+
+                if (railroad_reference == nullptr)
+                {
+                    ImGui::TableNextColumn(); // Previous length
+                    ImGui::Text("%s", "-");
+
+                    ImGui::TableNextColumn(); // Difference
+                    ImGui::TextColored({ 0.04f, 0.80f, 0.04f, 1.00f }, "%s", "NEW");
+
+                    ImGui::TableNextColumn(); // Previous Position
+                    ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%s", "-");
+                }
+                else if (!fields.old_data.railroad_keys.contains(entry.railroad.lock()->id))
+                {
+                    ImGui::TableNextColumn(); // Previous length
+                    ImGui::Text("%i", 0);
+
+                    ImGui::TableNextColumn(); // Difference
+                    ImGui::TextColored({ 0.04f, 0.80f, 0.04f, 1.00f }, "+%.1f%%", 100.0f);
+
+                    ImGui::TableNextColumn(); // Previous Position
+                    ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%s", "-");
+                }
+                else
+                {
+                    auto  refference_id = fields.old_data.railroad_keys.at(entry.railroad.lock()->id);
+                    auto& entry_reff    = fields.old_data.entries      .at(refference_id);
+
+                    ImGui::TableNextColumn(); // Previous length
+                    ImGui::Text("%i", (int)ceil(entry_reff.length));
+
+                    ImGui::TableNextColumn(); // Difference
+
+                    float difference = (entry.length - entry_reff.length) / entry_reff.length * 100.f;
+
+                    if (difference >= 0.1)
+                        ImGui::TextColored({ 0.04f, 0.80f, 0.04f, 1.00f }, "+%.1f%%", difference);
+                    else if (abs(difference) < 0.1)
+                        ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "=0.0%%");
+                    else
+                        ImGui::TextColored({ 0.80f, 0.04f, 0.04f, 1.00f }, "%.1f%%", difference);
+
+                    ImGui::TableNextColumn(); // Previous Position
+
+                    if (entry.top_position < entry_reff.top_position)
+                        ImGui::TextColored({ 0.04f, 0.80f, 0.04f, 1.00f }, "%i (^%i)", entry_reff.top_position,  (int)(entry_reff.top_position - entry.top_position));
+                    else if (entry.top_position == entry_reff.top_position)
+                        ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%i (=%i)", entry_reff.top_position,  (int)(entry_reff.top_position - entry.top_position));
+                    else
+                        ImGui::TextColored({ 0.80f, 0.04f, 0.04f, 1.00f }, "%i (v%i)", entry_reff.top_position, -(int)(entry_reff.top_position - entry.top_position));
+                }
             }
 
             ImGui::EndTable();

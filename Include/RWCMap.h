@@ -40,12 +40,20 @@ private:
     void poll_events();
     void process_inputs();
 
-
+    // --- Data
+    
     DataStorage data_storage_;
     
     DataLoader  data_loader_;
     DataEditor  data_editor_;
+
     Interface   interface_;
     Renderer    renderer_;
     Window      window_;
+
+    
+    // --- Data for difference
+
+    DataStorage data_storage_diff_;
+    DataLoader  data_loader_diff_;
 };

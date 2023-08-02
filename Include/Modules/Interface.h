@@ -8,7 +8,7 @@
 class Interface
 {
 public:
-    Interface(DataStorage& data_storage, DataLoader& data_loader, Window& window);
+    Interface(DataStorage& data_storage, DataLoader& data_loader, Window& window, DataStorage& data_storage_diff);
     Interface() = delete;
     Interface(Interface&) = delete;
     Interface(Interface&&) = delete;
@@ -41,13 +41,20 @@ private:
 
     void show_exit_popup();
 
+
     // --- Utils
 
     void create_message(const std::string& message, int timeout = 5);
 
-    // --- //
+
+    // --- Data
 
     DataStorage& data_storage_;
     DataLoader&  data_loader_;
     Window&      window_;
+
+
+    // --- Previous Data
+
+    DataStorage& data_storage_diff_;
 };

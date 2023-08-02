@@ -132,19 +132,27 @@ struct DataStorage
                 {
                     std::weak_ptr<Railroad> railroad;
 
-                    float length;
+                    float length = 0.f;
+
+                    size_t top_position = 0;
                 };
 
-                std::vector        <LengthTopEntry> entries;       // vector_pos -> entry
-                std::unordered_map <int, int>       railroad_keys; // rr_id      -> vector_pos
+                struct LengthsData 
+                {
+                    std::vector        <LengthTopEntry> entries;       // vector_pos -> entry
+                    std::unordered_map <int, size_t>    railroad_keys; // rr_id      -> vector_pos
+
+                    float total_length = 0;
+                };
+
+                LengthsData current_data;
+                LengthsData old_data;
 
                 std::string search_name = "";
 
                 bool with_built       = true ;
                 bool with_in_progress = false;
                 bool with_plans       = false;
-
-                float total_length = 0;
             } length_top;
 
             struct CursorMessage

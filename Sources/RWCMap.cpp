@@ -22,7 +22,9 @@ RWCMap::RWCMap(const std::string& app_title)
       data_loader_ (data_storage_),
       data_editor_ (data_storage_, window_),
       renderer_    (data_storage_, data_loader_, window_),
-      interface_   (data_storage_, data_loader_, window_) {}
+      interface_   (data_storage_, data_loader_, window_, data_storage_diff_),
+
+      data_loader_diff_(data_storage_diff_) {}
 RWCMap::~RWCMap()
 {
     
@@ -41,11 +43,20 @@ int RWCMap::run()
 
 int RWCMap::load_data()
 {
+    std::cout << "Init data loader ... ";
     if (data_loader_.init() != 0)
         return 1;
+    std::cout << "Done" << std::endl;
 
+    std::cout << "\nLoading current data ... " << std::endl;
     if (data_loader_.load_railroads_data("Data\\data.rr") != 0)
         return 1;
+
+    std::cout << "\nLoading reference data ... " << std::endl;
+    if (data_loader_diff_.load_railroads_data("Data\\data-backup-for-differentiated-length-top.rr") != 0)
+        return 1;
+
+    std::cout << "Loading completed" << std::endl;
 
     return 0;
 }
