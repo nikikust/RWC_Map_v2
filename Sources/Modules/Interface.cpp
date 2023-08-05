@@ -684,7 +684,7 @@ void Interface::show_debug()
 
     ImGui::Separator();
 
-    // ImGui::Checkbox("Screen mode", &screenMode);
+    ImGui::Checkbox("Enable length top manipulations", &data_storage_.settings.length_top_manipulations);
 
     ImGui::End();
 }
@@ -1379,7 +1379,9 @@ void Interface::show_length_top()
             ImGuiTableFlags_NoSavedSettings |
             ImGuiTableFlags_Borders;
 
-        if (ImGui::BeginTable("##length_top_table", 6, table_flags))
+        int columns_amount = data_storage_.settings.length_top_manipulations ? 7 : 6;
+
+        if (ImGui::BeginTable("##length_top_table", columns_amount, table_flags))
         {
             ImGui::TableSetupColumn("Position");
             ImGui::TableSetupColumn("Railroad Name");
@@ -1387,6 +1389,9 @@ void Interface::show_length_top()
             ImGui::TableSetupColumn("Previous Length");
             ImGui::TableSetupColumn("Difference");
             ImGui::TableSetupColumn("Previous Position");
+
+            if (data_storage_.settings.length_top_manipulations)
+                ImGui::TableSetupColumn("Existed before");
 
             ImGui::TableHeadersRow();
 
@@ -1411,14 +1416,28 @@ void Interface::show_length_top()
 
                 if (railroad_reference == nullptr)
                 {
-                    ImGui::TableNextColumn(); // Previous length
-                    ImGui::Text("%s", "-");
+                    if (entry.existed_before)
+                    {
+                        ImGui::TableNextColumn(); // Previous length
+                        ImGui::Text("%i", (int)ceil(entry.length));
 
-                    ImGui::TableNextColumn(); // Difference
-                    ImGui::TextColored({ 0.04f, 0.80f, 0.04f, 1.00f }, "%s", "NEW");
+                        ImGui::TableNextColumn(); // Difference
+                        ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "=0.0%%");
 
-                    ImGui::TableNextColumn(); // Previous Position
-                    ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%s", "-");
+                        ImGui::TableNextColumn(); // Previous Position
+                        ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%s", "NO DATA");
+                    }
+                    else
+                    {
+                        ImGui::TableNextColumn(); // Previous length
+                        ImGui::Text("%s", "-");
+
+                        ImGui::TableNextColumn(); // Difference
+                        ImGui::TextColored({ 0.04f, 0.80f, 0.04f, 1.00f }, "%s", "NEW");
+
+                        ImGui::TableNextColumn(); // Previous Position
+                        ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%s", "-");
+                    }
                 }
                 else if (!fields.old_data.railroad_keys.contains(entry.railroad.lock()->id))
                 {
@@ -1458,6 +1477,16 @@ void Interface::show_length_top()
                         ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%i (=%i)", entry_reff.top_position,  (int)(entry_reff.top_position - entry.top_position));
                     else
                         ImGui::TextColored({ 0.80f, 0.04f, 0.04f, 1.00f }, "%i (v%i)", entry_reff.top_position, -(int)(entry_reff.top_position - entry.top_position));
+                }
+
+
+                // --- Debug features
+
+                if (data_storage_.settings.length_top_manipulations)
+                {
+                    ImGui::TableNextColumn(); // Existed before
+                    if (railroad_reference == nullptr)
+                        ImGui::Checkbox(("##railroad_existed_before" + std::to_string(railroad->id)).c_str(), &entry.existed_before);
                 }
             }
 

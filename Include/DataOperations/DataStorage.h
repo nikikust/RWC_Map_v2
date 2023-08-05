@@ -135,6 +135,8 @@ struct DataStorage
                     float length = 0.f;
 
                     size_t top_position = 0;
+
+                    bool existed_before = false; // for new entries in DB because missed before
                 };
 
                 struct LengthsData 
@@ -186,6 +188,10 @@ struct DataStorage
 
         float background_color_3f[3] = { 0 };
         sf::Color background_color   = { 0, 0 ,0 ,255 };
+
+        // --- Debug
+
+        bool length_top_manipulations = false;
     } settings;
 
     struct Status
