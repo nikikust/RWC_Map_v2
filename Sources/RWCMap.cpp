@@ -125,7 +125,7 @@ void RWCMap::process_inputs()
 {
     // --- Camera movement
 
-    if (utils::mouse_pressed  (sf::Mouse::Left) && data_editor_.mouse_io_is_released())
+    if (utils::mouse_pressed  (sf::Mouse::Left)  && data_editor_.mouse_io_is_released())
     {
         data_editor_.save_mouse_position_on_click();
 
@@ -186,7 +186,7 @@ void RWCMap::process_inputs()
                 data_editor_.restore_point_position();
         }
     }
-    if (utils::mouse_released (sf::Mouse::Left) && data_editor_.mouse_io_is_released())
+    if (utils::mouse_released (sf::Mouse::Left)  && data_editor_.mouse_io_is_released())
     {
         if (data_editor_.is_railroad_selection_mode())
         {
@@ -258,6 +258,27 @@ void RWCMap::process_inputs()
         if (data_editor_.is_add_line_mode())
             if (data_editor_.is_camera_moving_mode())
                 data_editor_.stop_moving_camera();
+    }
+
+    if (utils::key_pressed(sf::Keyboard::Left ) && data_editor_.keyboard_io_is_released())
+    {
+        if (data_editor_.is_idle_mode())
+            data_storage_.camera.position.x -= int(data_storage_.screen_size.x / data_storage_.camera.scale_modifier_as_pow2);
+    }
+    if (utils::key_pressed(sf::Keyboard::Right) && data_editor_.keyboard_io_is_released())
+    {
+        if (data_editor_.is_idle_mode())
+            data_storage_.camera.position.x += int(data_storage_.screen_size.x / data_storage_.camera.scale_modifier_as_pow2);
+    }
+    if (utils::key_pressed(sf::Keyboard::Up)    && data_editor_.keyboard_io_is_released())
+    {
+        if (data_editor_.is_idle_mode())
+            data_storage_.camera.position.y -= int(data_storage_.screen_size.y / data_storage_.camera.scale_modifier_as_pow2);
+    }
+    if (utils::key_pressed(sf::Keyboard::Down)  && data_editor_.keyboard_io_is_released())
+    {
+        if (data_editor_.is_idle_mode())
+        data_storage_.camera.position.y += int(data_storage_.screen_size.y / data_storage_.camera.scale_modifier_as_pow2);
     }
 
     // --- Zooming

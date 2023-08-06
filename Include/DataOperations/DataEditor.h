@@ -41,6 +41,7 @@ public:
     bool hovered_point();
     bool hovered_line();
 
+    bool is_idle_mode();
     bool is_camera_moving_mode();
     bool is_railroad_selection_mode();
     bool is_point_moving_mode();

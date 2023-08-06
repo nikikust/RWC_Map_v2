@@ -133,6 +133,10 @@ bool DataEditor::hovered_line()
     return !data_storage_.status.overlapped_line.expired();
 }
 
+bool DataEditor::is_idle_mode()
+{
+    return data_storage_.status.movement_mode == DataStorage::Status::MovementMode::IDLE;
+}
 bool DataEditor::is_camera_moving_mode()
 {
     return data_storage_.status.movement_mode == DataStorage::Status::MovementMode::MovingCamera;
