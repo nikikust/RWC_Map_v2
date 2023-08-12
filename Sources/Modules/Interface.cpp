@@ -1379,7 +1379,7 @@ void Interface::show_length_top()
             ImGuiTableFlags_NoSavedSettings |
             ImGuiTableFlags_Borders;
 
-        int columns_amount = data_storage_.settings.length_top_manipulations ? 7 : 6;
+        int columns_amount = data_storage_.settings.length_top_manipulations ? 8 : 6;
 
         if (ImGui::BeginTable("##length_top_table", columns_amount, table_flags))
         {
@@ -1391,7 +1391,10 @@ void Interface::show_length_top()
             ImGui::TableSetupColumn("Previous Position");
 
             if (data_storage_.settings.length_top_manipulations)
-                ImGui::TableSetupColumn("Existed before");
+            {
+                ImGui::TableSetupColumn("Existed");
+                ImGui::TableSetupColumn("Goto");
+            }
 
             ImGui::TableHeadersRow();
 
@@ -1416,13 +1419,13 @@ void Interface::show_length_top()
 
                 if (railroad_reference == nullptr)
                 {
-                    if (entry.existed_before)
+                    if (entry.railroad.lock()->existed_before)
                     {
                         ImGui::TableNextColumn(); // Previous length
-                        ImGui::Text("%i", (int)ceil(entry.length));
+                        ImGui::Text("%s", "-");
 
                         ImGui::TableNextColumn(); // Difference
-                        ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "=0.0%%");
+                        ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%s", "NO DATA");
 
                         ImGui::TableNextColumn(); // Previous Position
                         ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%s", "NO DATA");
@@ -1486,7 +1489,21 @@ void Interface::show_length_top()
                 {
                     ImGui::TableNextColumn(); // Existed before
                     if (railroad_reference == nullptr)
-                        ImGui::Checkbox(("##railroad_existed_before" + std::to_string(railroad->id)).c_str(), &entry.existed_before);
+                    {
+                        ImGui::Checkbox(("##railroad_existed_before" + std::to_string(railroad->id)).c_str(), &entry.railroad.lock()->existed_before);
+                    }
+                    
+                    ImGui::TableNextColumn(); // Goto
+
+                    if (ImGui::Button(("Goto1##railroads_top_goto_" + std::to_string(entry.top_position)).c_str()))
+                    {
+                        if (!entry.railroad.lock()->starting_point.expired())
+                            data_storage_.camera.position = entry.railroad.lock()->starting_point.lock()->position;
+                        else
+                        {
+                            create_message("Railroad doesn't have lines to show!");
+                        }
+                    }
                 }
             }
 

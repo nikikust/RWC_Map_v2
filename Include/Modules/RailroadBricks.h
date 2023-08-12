@@ -53,6 +53,8 @@ public:
     int lines_connected = 0;
 
     std::weak_ptr<RR_Point> starting_point;
+
+    bool existed_before = false; // for new entries in DB because missed before
 };
 
 class RR_Zone

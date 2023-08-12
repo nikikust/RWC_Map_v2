@@ -135,8 +135,6 @@ struct DataStorage
                     float length = 0.f;
 
                     size_t top_position = 0;
-
-                    bool existed_before = false; // for new entries in DB because missed before
                 };
 
                 struct LengthsData 
