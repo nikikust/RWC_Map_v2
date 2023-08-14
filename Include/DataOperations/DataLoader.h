@@ -16,13 +16,13 @@ public:
     // --- //
     int  init();
 
-    int  load_railroads_data(const std::string& path = "Data\\data.rr");
-    void save_railroads_data(const std::string& path = "Data\\data.rr");
+    int  load_railroads_data(const std::string& path = "Data/data.rr");
+    void save_railroads_data(const std::string& path = "Data/data.rr");
 
     void load_map(sf::Vector2i from, sf::Vector2i to);
 
 private:
-    void backup_railroads_data(const std::string& file_path = "Data\\data.rr", const std::string& backup_path = "Data\\data_backups\\");
+    void backup_railroads_data(const std::string& file_path = "Data/data.rr", const std::string& backup_path = "Data/data_backups");
     void load_image(sf::Vector2i tile);
 
 private:
@@ -58,9 +58,9 @@ private:
     // --- Load Map
 
     // - Coordinates To Path _ x
-    std::string CTP_current_map    (int x, int y, const std::string& dir = "Data\\Map");
-    std::string CTP_difference_map (int x, int y, const std::string& dir = "Data\\Map");
-    std::string CTP_old_map        (int x, int y, const std::string& dir = "Data\\Map");
+    std::string CTP_current_map    (int x, int y, const std::string& dir = "Data/Map");
+    std::string CTP_difference_map (int x, int y, const std::string& dir = "Data/Map");
+    std::string CTP_old_map        (int x, int y, const std::string& dir = "Data/Map");
 
     std::string MIP_map_scale_path();
 

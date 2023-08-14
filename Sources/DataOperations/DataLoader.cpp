@@ -225,7 +225,7 @@ void DataLoader::backup_railroads_data(const std::string& file_path, const std::
         return;
 
     std::ifstream  source     (file_path, std::ios::binary);
-    std::ofstream  destination(backup_path + "data_" + utils::get_time_string() + ".rr", std::ios::binary);
+    std::ofstream  destination(backup_path + "/data_" + utils::get_time_string() + ".rr", std::ios::binary);
 
     destination << source.rdbuf();
 }

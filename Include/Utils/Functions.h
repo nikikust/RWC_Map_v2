@@ -83,9 +83,9 @@ namespace utils
 
     enum class ButtonState
     {
-        Up = 0,
-        Pressed = 1,
-        Down = 2,
+        Up       = 0,
+        Pressed  = 1,
+        Down     = 2,
         Released = 3
     };
 
@@ -106,13 +106,7 @@ namespace utils
 
     // --- OS based
 
-#ifdef __linux__ 
-    const char eol('\n'); // LF
-#elif _WIN32
     const char eol('\r'); // CR+LF
-#else
-    const char eol('\r'); // CR
-#endif
 
     void getline(std::istream& stream, std::string& string);
 

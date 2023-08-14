@@ -383,7 +383,7 @@ void DataEditor::make_screenshot()
     texture.create(render_window.getSize().x, render_window.getSize().y);
     texture.update(render_window);
 
-    texture.copyToImage().saveToFile("Data\\screenshots\\" + utils::get_time_string() + ".png");
+    texture.copyToImage().saveToFile("Data/screenshots/" + utils::get_time_string() + ".png");
 }
 
 void DataEditor::flip_exit_popup_state()

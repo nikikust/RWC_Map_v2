@@ -49,11 +49,11 @@ int RWCMap::load_data()
     std::cout << "Done" << std::endl;
 
     std::cout << "\nLoading current data ... " << std::endl;
-    if (data_loader_.load_railroads_data("Data\\data.rr") != 0)
+    if (data_loader_.load_railroads_data("Data/data.rr") != 0)
         return 1;
 
     std::cout << "\nLoading reference data ... " << std::endl;
-    if (data_loader_diff_.load_railroads_data("Data\\data-backup-for-differentiated-length-top.rr") != 0)
+    if (data_loader_diff_.load_railroads_data("Data/data-backup-for-differentiated-length-top.rr") != 0)
         return 1;
 
     std::cout << "Loading completed" << std::endl;
@@ -403,7 +403,7 @@ void RWCMap::process_inputs()
         if (data_editor_.keyboard_io_is_released())
         {
             if (utils::key_pressed(sf::Keyboard::S))
-                data_loader_.save_railroads_data();
+                data_loader_.save_railroads_data("Data/data.rr");
         }
     }
     // --- //
