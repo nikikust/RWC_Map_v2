@@ -17,7 +17,7 @@ Window::Window(DataStorage& data_storage, const std::string window_title)
 
     data_storage_.screen_size = sf::Vector2i(window_.getSize());
 
-    ImGui::SFML::Init(window_);
+    bool result = ImGui::SFML::Init(window_);
 
     imgui_io_ = &ImGui::GetIO();
     imgui_io_->ConfigFlags |= ImGuiConfigFlags_DockingEnable;

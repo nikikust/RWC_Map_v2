@@ -346,7 +346,9 @@ void DataEditor::open_livemap()
     std::string livemap_link = utils::to_map_coords(
         data_storage_.camera.position, utils::minmax(0, (int)data_storage_.camera.scale_modifier + 2, 5));
 
-    ShellExecute(0, 0, std::wstring(livemap_link.begin(), livemap_link.end()).c_str(), 0, 0, SW_SHOW);
+#ifdef WIN32
+    ShellExecute(0, 0, std::string(livemap_link.begin(), livemap_link.end()).c_str(), 0, 0, SW_SHOW);
+#endif // WIN32
 }
 
 void DataEditor::screenshot_with_interface()
@@ -377,13 +379,14 @@ void DataEditor::check_screenshot_status()
 }
 void DataEditor::make_screenshot()
 {
+    bool result;
     auto& render_window = window_.get_render_area();
 
     sf::Texture texture;
-    texture.create(render_window.getSize().x, render_window.getSize().y);
+    result = texture.create(render_window.getSize().x, render_window.getSize().y);
     texture.update(render_window);
 
-    texture.copyToImage().saveToFile("Data/screenshots/" + utils::get_time_string() + ".png");
+    result = texture.copyToImage().saveToFile("Data/screenshots/" + utils::get_time_string() + ".png");
 }
 
 void DataEditor::flip_exit_popup_state()

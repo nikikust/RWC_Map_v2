@@ -83,12 +83,25 @@ namespace utils
     }
     std::string get_time_string()
     {
-        time_t time = std::time(nullptr);
-        tm local_time;
-        localtime_s(&local_time, &time);
+        // --- //
 
         std::ostringstream oss;
+
+#ifdef WIN32
+        tm local_time;
+        time_t time = std::time(nullptr);
+
+        localtime_s(&local_time, &time);
+
         oss << std::put_time(&local_time, "%d-%m-%Y_%H-%M-%S");
+#else
+        struct tm* local_time;
+        time_t t = time(NULL);
+
+        local_time = localtime(&t);
+
+        oss << std::put_time(local_time, "%d-%m-%Y_%H-%M-%S");
+#endif
 
         return oss.str();
     }
@@ -265,9 +278,9 @@ namespace utils
     {
         std::getline(stream, string, eol);
 
-#ifdef _WIN32
+//#ifdef _WIN32
         stream.get(); // skip LF after CR
-#endif
+//#endif
     }
 
     std::string to_map_coords(sf::Vector2i position, int scale)

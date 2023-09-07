@@ -9,6 +9,7 @@
 #include <list>
 #include <cmath>
 #include <ctime>
+#include <chrono>
 #include <string>
 #include <iomanip>
 #include <sstream>
@@ -106,7 +107,13 @@ namespace utils
 
     // --- OS based
 
+//#ifdef __linux__ 
+//    const char eol('\n'); // LF
+//#elif _WIN32
     const char eol('\r'); // CR+LF
+//#else
+//    const char eol('\r'); // CR
+//#endif
 
     void getline(std::istream& stream, std::string& string);
 

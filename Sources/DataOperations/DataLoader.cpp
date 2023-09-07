@@ -128,7 +128,7 @@ int  DataLoader::load_railroads_data(const std::string& path)
     }
     else
     {
-        std::cout << "Can't find './Data/data.rr' file!" << std::endl;
+        std::cout << "Can't find 'Data/data.rr' file!" << std::endl;
     }
 
     return result;
@@ -200,13 +200,13 @@ void DataLoader::load_map(sf::Vector2i from, sf::Vector2i to)
 
             // --- Prepare memory
             map_data.map_images[index].current_map_tex = { std::make_shared<sf::Texture>() };
-            map_data.map_images[index].current_map_spr = { std::make_shared<sf::Sprite> () };
+            map_data.map_images[index].current_map_spr = { std::make_shared<sf::Sprite> (*map_data.map_images[index].current_map_tex) };
 
             map_data.map_images[index].difference_map_tex = { std::make_shared<sf::Texture>() };
-            map_data.map_images[index].difference_map_spr = { std::make_shared<sf::Sprite> () };
+            map_data.map_images[index].difference_map_spr = { std::make_shared<sf::Sprite> (*map_data.map_images[index].difference_map_tex) };
 
             map_data.map_images[index].old_map_tex = { std::make_shared<sf::Texture>() };
-            map_data.map_images[index].old_map_spr = { std::make_shared<sf::Sprite> () };
+            map_data.map_images[index].old_map_spr = { std::make_shared<sf::Sprite> (*map_data.map_images[index].old_map_tex) };
 
             // --- Launch thread
             std::thread load_image_thread(&DataLoader::load_image, this, sf::Vector2i{horizontal, vertical});
@@ -241,7 +241,7 @@ void DataLoader::load_image(sf::Vector2i tile)
 
     if (utils::file_exists(path_to_current))
     {
-        data_storage_.map_data.map_images[index].current_map_tex->loadFromFile(path_to_current);
+        bool result = data_storage_.map_data.map_images[index].current_map_tex->loadFromFile(path_to_current);
         data_storage_.map_data.map_images[index].current_map_spr->setTexture(
             *data_storage_.map_data.map_images[index].current_map_tex, true
         );
@@ -251,7 +251,7 @@ void DataLoader::load_image(sf::Vector2i tile)
 
     if (utils::file_exists(path_to_difference))
     {
-        data_storage_.map_data.map_images[index].difference_map_tex->loadFromFile(path_to_difference);
+        bool result = data_storage_.map_data.map_images[index].difference_map_tex->loadFromFile(path_to_difference);
         data_storage_.map_data.map_images[index].difference_map_spr->setTexture(
             *data_storage_.map_data.map_images[index].difference_map_tex, true
         );
@@ -261,7 +261,7 @@ void DataLoader::load_image(sf::Vector2i tile)
 
     if (utils::file_exists(path_to_old))
     {
-        data_storage_.map_data.map_images[index].old_map_tex->loadFromFile(path_to_old);
+        bool result = data_storage_.map_data.map_images[index].old_map_tex->loadFromFile(path_to_old);
         data_storage_.map_data.map_images[index].old_map_spr->setTexture(
             *data_storage_.map_data.map_images[index].old_map_tex, true
         );
@@ -339,7 +339,7 @@ int DataLoader::load_RRs_v1_0(const std::string& path)
         
         int railroad_id           { stoi(b[0]) };
         std::string railroad_name { "" };
-        sf::Color railroad_color  { (sf::Uint8)stoi(b[1]), (sf::Uint8)stoi(b[2]), (sf::Uint8)stoi(b[3]), 255 };
+        sf::Color railroad_color  { (uint8_t)stoi(b[1]), (uint8_t)stoi(b[2]), (uint8_t)stoi(b[3]), 255 };
 
 
         data_storage_.railroads_data.Railroads.push_back(
@@ -581,6 +581,10 @@ int DataLoader::load_RRs_v2_0(std::ifstream& file)
 
     nlohmann::json data{ nlohmann::json::from_ubjson(v_ubjson) };
     
+#ifndef WIN32
+    data = data[0];
+#endif // WIN32
+
     load_players   (data.at("Players"  ));
     load_railroads (data.at("Railroads"));
     load_points    (data.at("RR_Points"));
