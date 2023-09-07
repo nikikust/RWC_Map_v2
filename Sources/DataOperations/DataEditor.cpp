@@ -347,7 +347,7 @@ void DataEditor::open_livemap()
         data_storage_.camera.position, utils::minmax(0, (int)data_storage_.camera.scale_modifier + 2, 5));
 
 #ifdef WIN32
-    ShellExecute(0, 0, std::string(livemap_link.begin(), livemap_link.end()).c_str(), 0, 0, SW_SHOW);
+    ShellExecuteA(0, 0, livemap_link.c_str(), 0, 0, SW_SHOW);
 #endif // WIN32
 }
 
