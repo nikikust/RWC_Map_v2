@@ -1,6 +1,6 @@
 #pragma once
 #include <imgui.h>
-#include <imgui-sfml.h>
+#include <imgui-SFML.h>
 #include <imgui_stdlib.h>
 #include <imgui_internal.h>
 
