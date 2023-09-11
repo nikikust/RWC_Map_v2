@@ -153,7 +153,7 @@ In the "Data" folder there is a file named "settings.json". In it you can set th
 
 ### How to build
 
-Program tested at Windows 10 (Visual Studio 2022).
+Program tested at Windows 10 (Visual Studio 2022) and Ubuntu 22.04 LTS (CMake).
 
 #### Windows (Visual Studio & vcpkg):
 - Install Visual Studio and vcpkg;
