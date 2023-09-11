@@ -5,6 +5,10 @@ x64
 *.vcxproj
 *.filters
 
+# CMake
+out
+.build
+
 # Data
 *.rr
 Data/screenshots

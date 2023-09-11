@@ -3,8 +3,9 @@
 
 #include "DataStorage.h"
 
+#ifdef WIN32
 #include <Urlmon.h>
-
+#endif // WIN32
 
 class DataEditor
 {

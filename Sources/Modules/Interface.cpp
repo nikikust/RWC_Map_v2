@@ -295,10 +295,10 @@ void Interface::show_lines_edit()
         auto railroad = data_storage_.selection_info.railroad.lock();
 
         railroad->color = {
-            static_cast<sf::Uint8>(fields.new_RR_color_3f[0] * 255),
-            static_cast<sf::Uint8>(fields.new_RR_color_3f[1] * 255),
-            static_cast<sf::Uint8>(fields.new_RR_color_3f[2] * 255),
-                                                               255
+            static_cast<uint8_t>(fields.new_RR_color_3f[0] * 255),
+            static_cast<uint8_t>(fields.new_RR_color_3f[1] * 255),
+            static_cast<uint8_t>(fields.new_RR_color_3f[2] * 255),
+                                                             255
         };
     }
     if (ImGui::Button("Revert color") && railroad_selected)
@@ -642,9 +642,9 @@ void Interface::show_debug()
     ImGui::Begin("Debug");
 
     if (ImGui::ColorEdit3("Background color", data_storage_.settings.background_color_3f)) {
-        data_storage_.settings.background_color.r = static_cast<sf::Uint8>(data_storage_.settings.background_color_3f[0] * 255.f);
-        data_storage_.settings.background_color.g = static_cast<sf::Uint8>(data_storage_.settings.background_color_3f[1] * 255.f);
-        data_storage_.settings.background_color.b = static_cast<sf::Uint8>(data_storage_.settings.background_color_3f[2] * 255.f);
+        data_storage_.settings.background_color.r = static_cast<uint8_t>(data_storage_.settings.background_color_3f[0] * 255.f);
+        data_storage_.settings.background_color.g = static_cast<uint8_t>(data_storage_.settings.background_color_3f[1] * 255.f);
+        data_storage_.settings.background_color.b = static_cast<uint8_t>(data_storage_.settings.background_color_3f[2] * 255.f);
     }
 
 
@@ -659,11 +659,11 @@ void Interface::show_debug()
     
     ImGui::Text("Pos X: %i | Pos Y: %i", camera_position.x, camera_position.y);
 
-    ImGui::Text("Num lines: %i | Num points: %i", 
+    ImGui::Text("Num lines: %lu | Num points: %lu", 
         data_storage_.railroads_data.RR_Lines.size(),
         data_storage_.railroads_data.RR_Points.size());
 
-    ImGui::Text("Railroads amount: %i", data_storage_.railroads_data.Railroads.size());
+    ImGui::Text("Railroads amount: %i", (int)data_storage_.railroads_data.Railroads.size());
 
 
     ImGui::Text("Selected Railroad ID: %i", data_storage_.selection_info.railroad.expired() ? 0 : data_storage_.selection_info.railroad.lock()->id);
@@ -1328,15 +1328,13 @@ void Interface::show_length_top()
     ImGui::SameLine();
     if (ImGui::Button("Copy"))
     {
-        sf::Clipboard clipboard;
-
         std::string as_string = "Total length: " + std::to_string((int)ceil(fields.current_data.total_length)) + "\n";
         int position_counter = 1;
 
         for (auto& entry : fields.current_data.entries)
             as_string += std::to_string(position_counter++) + ") " + entry.railroad.lock()->name + " - " + std::to_string((int)ceil(entry.length)) + "\n";
-
-        clipboard.setString(as_string);
+	
+        sf::Clipboard::setString(as_string);
     }
 
     ImGui::SameLine();
@@ -1475,11 +1473,11 @@ void Interface::show_length_top()
                     ImGui::TableNextColumn(); // Previous Position
 
                     if (entry.top_position < entry_reff.top_position)
-                        ImGui::TextColored({ 0.04f, 0.80f, 0.04f, 1.00f }, "%i (^%i)", entry_reff.top_position,  (int)(entry_reff.top_position - entry.top_position));
+                        ImGui::TextColored({ 0.04f, 0.80f, 0.04f, 1.00f }, "%lu (^%i)", entry_reff.top_position,  (int)(entry_reff.top_position - entry.top_position));
                     else if (entry.top_position == entry_reff.top_position)
-                        ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%i (=%i)", entry_reff.top_position,  (int)(entry_reff.top_position - entry.top_position));
+                        ImGui::TextColored({ 0.80f, 0.80f, 0.80f, 1.00f }, "%lu (=%i)", entry_reff.top_position,  (int)(entry_reff.top_position - entry.top_position));
                     else
-                        ImGui::TextColored({ 0.80f, 0.04f, 0.04f, 1.00f }, "%i (v%i)", entry_reff.top_position, -(int)(entry_reff.top_position - entry.top_position));
+                        ImGui::TextColored({ 0.80f, 0.04f, 0.04f, 1.00f }, "%lu (v%i)", entry_reff.top_position, -(int)(entry_reff.top_position - entry.top_position));
                 }
 
 
@@ -1548,7 +1546,7 @@ void Interface::show_cursor_message()
 
     ImGui::Begin("##Message", NULL, flags);
 
-    ImGui::TextWrapped(fields.message.c_str());
+    ImGui::TextWrapped("%s", fields.message.c_str());
 
     ImGui::End();
 }
