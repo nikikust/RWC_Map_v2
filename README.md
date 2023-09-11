@@ -170,8 +170,37 @@ vcpkg install nlohmann-json
 ```
 - Open .sln project with VS and build.
 
-#### Windows (MSBuild.exe & vcpkg)
-- TBD.
 
-#### Linux (apt-install & vcpkg)
-- TBD.
+#### Windows (Visual Studio & CMake)
+- Open folder as CMake project
+- Build app
+
+
+#### Windows (CMake)  - Not Competed!
+- Install CMake and C++ compiler
+- Prepare build folder:
+```
+mkdir .build && cd .build
+```
+- Build app:
+```
+cmake --build .
+```
+
+
+#### Linux (CMake)
+- Get required packages:
+```
+apt-get update
+apt-get install -y sudo build-essential git cmake curl unzip tar zip autoconf libtool pkg-config libx11-dev libxrandr-dev libxi-dev libudev-dev libgl1-mesa-dev 
+```
+- Prepare build folder:
+```
+mkdir .build && cd .build
+```
+- Build app:
+```
+cmake ..
+make
+```
+

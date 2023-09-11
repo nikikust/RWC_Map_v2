@@ -4,7 +4,6 @@ x64
 *.user
 *.vcxproj
 *.filters
-*.sln
 
 # CMake
 out
