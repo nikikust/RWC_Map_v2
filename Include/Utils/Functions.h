@@ -26,7 +26,7 @@
 
 namespace utils
 {
-    // --- Math
+    // --- Math 
 
     struct PopUpState
     {

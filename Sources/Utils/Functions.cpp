@@ -285,8 +285,8 @@ namespace utils
 
     std::string to_map_coords(sf::Vector2i position, int scale)
     {
-        // 142.44.191.87:8150/?worldname=world&mapname=flat&zoom=2&x=14&y=64&z=67
-        std::string base_link = "http://142.44.191.87:8150/?worldname=world&mapname=flat&zoom=";
+        // http://198.50.173.174:19256/?worldname=world&mapname=flat&zoom=2&x=14&y=64&z=67
+        std::string base_link = "http://198.50.173.174:19256/?worldname=world&mapname=flat&zoom=";
 
         base_link += std::to_string(scale) + "&x=";
         base_link += std::to_string(position.x * 2) + "&y=64&z=";
