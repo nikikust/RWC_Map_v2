@@ -60,6 +60,14 @@ namespace utils
 
     bool is_in_vector(std::string element, const std::vector<std::string>& list);
 
+    enum class Align
+    {
+        Left,
+        Middle,
+        Right
+    };
+    std::string align(const std::string& text, int output_width, Align align);
+
     // --- ImGui
 
     inline namespace literals

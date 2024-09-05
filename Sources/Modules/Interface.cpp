@@ -1328,12 +1328,8 @@ void Interface::show_length_top()
     ImGui::SameLine();
     if (ImGui::Button("Copy"))
     {
-        std::string as_string = "Total length: " + std::to_string((int)ceil(fields.current_data.total_length)) + "\n";
-        int position_counter = 1;
-
-        for (auto& entry : fields.current_data.entries)
-            as_string += std::to_string(position_counter++) + ") " + entry.railroad.lock()->name + " - " + std::to_string((int)ceil(entry.length)) + "\n";
-	
+        std::string as_string = form_length_top();
+        
         sf::Clipboard::setString(as_string);
     }
 
@@ -1616,4 +1612,71 @@ void Interface::create_message(const std::string& message, int timeout)
     data_storage_.menus.CursorMessage = true;
     data_storage_.menus.fields.cursor_message.elapse_at = time(0) + timeout;
     data_storage_.menus.fields.cursor_message.message = message;
+}
+
+std::string Interface::form_length_top() const
+{
+    auto& fields = data_storage_.menus.fields.length_top;
+    std::string output = "";
+    std::string global_header           = "Railroads length top";
+    std::string position_column_header  = "#";
+    std::string rr_name_column_header   = "Railroad Name";
+    std::string rr_length_column_header = "Length";
+
+    int position_counter = 1;
+
+    int max_rr_position_width = (int)std::max(position_column_header.length(), std::to_string(fields.current_data.entries.size()).length());
+    int max_rr_name_width     = (int)rr_name_column_header.length();
+    int max_rr_length_width   = (int)rr_length_column_header.length();
+
+    for (auto& entry : fields.current_data.entries)
+    {
+        max_rr_name_width = std::max(max_rr_name_width, int(entry.railroad.lock()->name.length()));
+        max_rr_length_width = std::max(max_rr_length_width, int(std::to_string((int)ceil(entry.length)).length()));
+    }
+
+    //                      [max_rr_position_width]--+--[max_rr_name_width]--+--[max_rr_length_width]
+    int total_header_width = max_rr_position_width + 3 + max_rr_name_width + 3 + max_rr_length_width;
+
+    using utils::operator*;
+    std::string horizontal_line = "+" + std::string("-") * (total_header_width + 2) + "+\n";
+    std::string horizontal_line_with_sections = 
+        "+-" +
+        std::string("-") * max_rr_position_width +
+        "-+-" +
+        std::string("-") * max_rr_name_width +
+        "-+-" +
+        std::string("-") * max_rr_length_width +
+        "-+\n";
+
+    output += horizontal_line;
+    output += "| " + utils::align(global_header, total_header_width, utils::Align::Middle) + " |\n";
+    output += horizontal_line_with_sections;
+
+    output +=
+        "| " +
+        utils::align(position_column_header, max_rr_position_width, utils::Align::Middle) +
+        " | " +
+        utils::align(rr_name_column_header, max_rr_name_width, utils::Align::Middle) +
+        " | " +
+        utils::align(rr_length_column_header, max_rr_length_width, utils::Align::Middle) +
+        " |\n";
+
+    output += horizontal_line_with_sections;
+
+    for (auto& entry : fields.current_data.entries)
+    {
+        output +=
+            "| " +
+            utils::align(std::to_string(position_counter++), max_rr_position_width, utils::Align::Left) +
+            " | " +
+            utils::align(entry.railroad.lock()->name, max_rr_name_width, utils::Align::Left) +
+            " | " +
+            utils::align(std::to_string((int)ceil(entry.length)), max_rr_length_width, utils::Align::Left) +
+            " |\n";
+    }
+
+    output += horizontal_line_with_sections;
+
+    return output;
 }

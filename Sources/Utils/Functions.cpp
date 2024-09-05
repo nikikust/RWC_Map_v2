@@ -148,6 +148,36 @@ namespace utils
         return false;
     }
 
+    std::string align(const std::string& text, int output_width, Align align)
+    {
+        if (text.length() >= output_width)
+        {
+            return text;
+        }
+
+        std::string output = "";
+
+        switch (align)
+        {
+        case utils::Align::Left:
+            output = text + std::string(" ") * (output_width - (int)text.length());
+            break;
+        case utils::Align::Middle: {
+            int from_left = (output_width - (int)text.length()) / 2;
+            int from_right = output_width - (int)text.length() - from_left;
+            output = 
+                std::string(" ") * from_left + text + std::string(" ") * from_right;
+        }   break;
+        case utils::Align::Right:
+            output = std::string(" ") * (output_width - (int)text.length()) + text;
+            break;
+        default:
+            break;
+        }
+
+        return output;
+    }
+
     // --- ImGui
 
     inline namespace literals

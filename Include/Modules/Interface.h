@@ -45,7 +45,7 @@ private:
     // --- Utils
 
     void create_message(const std::string& message, int timeout = 5);
-
+    std::string form_length_top() const;
 
     // --- Data
 
