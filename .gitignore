@@ -6,11 +6,11 @@ x64
 *.filters
 
 # CMake
-./out
-./Bin
-./Build
+out
+Bin
+Build
 .build
 
 # Data
 *.rr
-/Data/screenshots
+Data/screenshots
